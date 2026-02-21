@@ -1,0 +1,24 @@
+Kwaery's Volume Control - Required Permissions
+================================================
+
+1. storage
+   Saves your volume settings (global + per-domain) so they
+   persist across browser restarts and PC reboots.
+
+2. activeTab
+   Allows the extension to interact with the page you're
+   currently viewing when you click the extension icon.
+
+3. tabs
+   Lets the extension see all open tabs and their URLs so it
+   can list domains in the Tab Volume Manager and broadcast
+   volume changes to every tab at once.
+
+4. scripting
+   Enables injecting a small script into pages to directly
+   set the volume on <audio> and <video> elements in real time.
+
+5. host_permissions: <all_urls>
+   Required so the extension can control media volume on any
+   website, not just the active tab. Without this, per-domain
+   volume and global cross-tab control would not work.

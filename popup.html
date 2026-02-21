@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Global Volume -->
+    <div class="section">
+      <div class="section-label">Global</div>
+      <div class="slider-row">
+        <div class="slider-wrapper">
+          <div class="slider-track-bg"></div>
+          <div class="slider-track-fill" id="globalFill"></div>
+          <input type="range" min="0" max="100" value="100" class="slider" id="globalSlider">
+        </div>
+        <span class="value" id="globalValue">100%</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Tab Volume Manager -->
+    <div class="section">
+      <div class="section-header" id="tabManagerToggle">
+        <span class="section-label">Tab Volume Manager</span>
+        <span class="chevron" id="chevron">▾</span>
+      </div>
+      <div class="domain-list" id="domainList">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+
+</html>
