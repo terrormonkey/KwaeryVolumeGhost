@@ -23,6 +23,12 @@ function getRootDomain(url) {
 
 // Injected into pages to set volume
 const setVolumeScript = (vol) => {
+  const ytPlayer = document.getElementById('movie_player') || document.querySelector('.html5-video-player');
+  if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
+    ytPlayer.setVolume(vol * 100);
+    if (typeof ytPlayer.unMute === 'function' && vol > 0) ytPlayer.unMute();
+  }
+
   const setter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume').set;
   document.querySelectorAll('audio, video').forEach(m => setter.call(m, vol));
 };
@@ -60,6 +66,7 @@ function applyGlobalToAllTabs(globalVol) {
         });
         chrome.scripting.executeScript({
           target: { tabId: tab.id, allFrames: true },
+          world: "MAIN",
           func: setVolumeScript,
           args: [effective]
         }).catch(() => { });
@@ -83,6 +90,7 @@ function applyDomainVolume(domain, domainVol) {
           });
           chrome.scripting.executeScript({
             target: { tabId: tab.id, allFrames: true },
+            world: "MAIN",
             func: setVolumeScript,
             args: [effective]
           }).catch(() => { });

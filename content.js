@@ -1,13 +1,28 @@
 let currentVolume = 1.0;
 
-const nativeVolumeSetter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume').set;
-const nativeVolumeGetter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume').get;
+function executeInMainWorld(func, args) {
+    const script = document.createElement('script');
+    script.textContent = `(${func.toString()})(...${JSON.stringify(args)});`;
+    (document.head || document.documentElement).appendChild(script);
+    script.remove();
+}
 
 function setVolume(val) {
     currentVolume = val;
-    document.querySelectorAll('audio, video').forEach(media => {
-        nativeVolumeSetter.call(media, val);
-    });
+    executeInMainWorld((v) => {
+        // YouTube specific UI Sync
+        const ytPlayer = document.getElementById('movie_player') || document.querySelector('.html5-video-player');
+        if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
+            ytPlayer.setVolume(v * 100);
+            if (typeof ytPlayer.unMute === 'function' && v > 0) ytPlayer.unMute();
+        }
+
+        // Generic fallback using native setter
+        const nativeVolumeSetter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume').set;
+        document.querySelectorAll('audio, video').forEach(media => {
+            nativeVolumeSetter.call(media, v);
+        });
+    }, [val]);
 }
 
 function getVolume() {
